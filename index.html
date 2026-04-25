@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Finals Lab Activity #4 - Recursion</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "Segoe UI", Tahoma, sans-serif;
+    background: linear-gradient(135deg, #eef4fb 0%, #ffffff 60%);
+    min-height: 100vh;
+    color: #222;
+  }
+  .app {
+    max-width: 880px;
+    margin: 30px auto;
+    background: #fff;
+    border: 1px solid #d6e1ee;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(0,0,0,.06);
+    padding: 28px 32px 32px;
+  }
+  h1 {
+    color: #1f4e79;
+    text-align: center;
+    margin: 0 0 6px;
+    letter-spacing: 1px;
+  }
+  .subtitle {
+    text-align: center;
+    color: #555;
+    margin-bottom: 18px;
+  }
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  .menu-image {
+    text-align: center;
+    margin: 10px 0 20px;
+  }
+  .menu-image img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    border: 1px solid #e0e7f0;
+  }
+  .menu-buttons {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-top: 10px;
+  }
+  button {
+    font-family: inherit;
+    font-size: 15px;
+    padding: 12px 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform .05s ease, background .15s ease;
+  }
+  button:active { transform: translateY(1px); }
+  .menu-btn {
+    background: #1f4e79;
+    color: #fff;
+    font-weight: 600;
+  }
+  .menu-btn:hover { background: #2a619a; }
+  .menu-btn.exit { background: #a83232; }
+  .menu-btn.exit:hover { background: #c53e3e; }
+
+  .seq-title {
+    color: #1f4e79;
+    text-align: center;
+    margin-bottom: 8px;
+  }
+  .seq-image {
+    text-align: center;
+    margin-bottom: 10px;
+  }
+  .seq-image img {
+    max-width: 90%;
+    height: auto;
+    border-radius: 8px;
+    border: 1px solid #e0e7f0;
+  }
+  .intro {
+    text-align: center;
+    margin: 8px 0 14px;
+    font-size: 15px;
+  }
+  .input-row {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+  }
+  .input-row label { align-self: center; }
+  .input-row input {
+    width: 90px;
+    padding: 8px 10px;
+    font-size: 15px;
+    border: 1px solid #b9c8d8;
+    border-radius: 6px;
+  }
+  .compute-btn { background: #2e7d32; color: #fff; }
+  .compute-btn:hover { background: #388e3c; }
+  .again-btn { background: #5a6b7d; color: #fff; }
+  .again-btn:hover { background: #6f8194; }
+  .back-btn { background: #6a4cab; color: #fff; }
+  .back-btn:hover { background: #7d5dc1; }
+
+  .output {
+    background: #f5f8fc;
+    border: 1px solid #d6e1ee;
+    border-radius: 8px;
+    padding: 14px 16px;
+    min-height: 80px;
+    white-space: pre-wrap;
+    word-break: break-word;
+    font-size: 14px;
+    line-height: 1.55;
+  }
+  .footer-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 14px;
+    flex-wrap: wrap;
+  }
+  .error {
+    color: #b00020;
+    font-weight: 600;
+  }
+</style>
+</head>
+<body>
+  <div class="app">
+    <h1>RECURSIVE SEQUENCES</h1>
+    <p class="subtitle">Finals Lab Activity #4 - Dorado, Jaculbe, Tajarros, Salgado</p>
+
+    <!-- MAIN MENU -->
+    <section id="menu" class="screen active">
+      <div class="menu-image">
+        <img src="recursive sequence.png" alt="Recursive Sequence definition">
+      </div>
+      <div class="menu-buttons">
+        <button class="menu-btn" onclick="showScreen('fib')">1) Fibonacci numbers</button>
+        <button class="menu-btn" onclick="showScreen('luc')">2) Lucas numbers</button>
+        <button class="menu-btn" onclick="showScreen('tri')">3) Tribonacci numbers</button>
+        <button class="menu-btn exit" onclick="exitApp()">4) Exit</button>
+      </div>
+    </section>
+
+    <!-- FIBONACCI -->
+    <section id="fib" class="screen">
+      <h2 class="seq-title">FIBONACCI NUMBERS</h2>
+      <div class="seq-image"><img src="Fibonacci.png" alt="Fibonacci numbers definition"></div>
+      <p class="intro">This program will find all the terms of the Fibonacci numbers.</p>
+      <div class="input-row">
+        <label for="fib-input">Input the number of terms:</label>
+        <input id="fib-input" type="number" min="3">
+        <button class="compute-btn" onclick="compute('fib')">Compute</button>
+      </div>
+      <div id="fib-output" class="output"></div>
+      <div class="footer-row">
+        <button class="again-btn" onclick="resetScreen('fib')">Compute Again</button>
+        <button class="back-btn" onclick="showScreen('menu')">Back to Main Menu</button>
+      </div>
+    </section>
+
+    <!-- LUCAS -->
+    <section id="luc" class="screen">
+      <h2 class="seq-title">LUCAS NUMBERS</h2>
+      <div class="seq-image"><img src="lucas.png" alt="Lucas numbers definition"></div>
+      <p class="intro">This program will find all the terms of the Lucas numbers.</p>
+      <div class="input-row">
+        <label for="luc-input">Input the number of terms:</label>
+        <input id="luc-input" type="number" min="3">
+        <button class="compute-btn" onclick="compute('luc')">Compute</button>
+      </div>
+      <div id="luc-output" class="output"></div>
+      <div class="footer-row">
+        <button class="again-btn" onclick="resetScreen('luc')">Compute Again</button>
+        <button class="back-btn" onclick="showScreen('menu')">Back to Main Menu</button>
+      </div>
+    </section>
+
+    <!-- TRIBONACCI -->
+    <section id="tri" class="screen">
+      <h2 class="seq-title">TRIBONACCI NUMBERS</h2>
+      <div class="seq-image"><img src="tribonacci.png" alt="Tribonacci numbers definition"></div>
+      <p class="intro">This program will find all the terms of the Tribonacci numbers.</p>
+      <div class="input-row">
+        <label for="tri-input">Input the number of terms:</label>
+        <input id="tri-input" type="number" min="4">
+        <button class="compute-btn" onclick="compute('tri')">Compute</button>
+      </div>
+      <div id="tri-output" class="output"></div>
+      <div class="footer-row">
+        <button class="again-btn" onclick="resetScreen('tri')">Compute Again</button>
+        <button class="back-btn" onclick="showScreen('menu')">Back to Main Menu</button>
+      </div>
+    </section>
+  </div>
+
+<script>
+  // Recursive definitions with memoization (BigInt-safe).
+  const fibMemo = new Map([[0, 0n], [1, 1n]]);
+  function fib(n) {
+    if (fibMemo.has(n)) return fibMemo.get(n);
+    const v = fib(n - 1) + fib(n - 2);
+    fibMemo.set(n, v);
+    return v;
+  }
+
+  const lucMemo = new Map([[0, 2n], [1, 1n]]);
+  function luc(n) {
+    if (lucMemo.has(n)) return lucMemo.get(n);
+    const v = luc(n - 1) + luc(n - 2);
+    lucMemo.set(n, v);
+    return v;
+  }
+
+  const triMemo = new Map([[0, 0n], [1, 0n], [2, 1n]]);
+  function tri(n) {
+    if (triMemo.has(n)) return triMemo.get(n);
+    const v = tri(n - 1) + tri(n - 2) + tri(n - 3);
+    triMemo.set(n, v);
+    return v;
+  }
+
+  const config = {
+    fib: { fn: fib, min: 3, label: "Fibonacci",
+           intro: "This program will find all the terms of the Fibonacci numbers." },
+    luc: { fn: luc, min: 3, label: "Lucas",
+           intro: "This program will find all the terms of the Lucas numbers." },
+    tri: { fn: tri, min: 4, label: "Tribonacci",
+           intro: "This program will find all the terms of the Tribonacci numbers." }
+  };
+
+  function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+  }
+
+  function resetScreen(id) {
+    document.getElementById(id + '-input').value = '';
+    document.getElementById(id + '-output').textContent = '';
+    document.getElementById(id + '-input').focus();
+  }
+
+  function compute(id) {
+    const cfg = config[id];
+    const inputEl = document.getElementById(id + '-input');
+    const outEl = document.getElementById(id + '-output');
+    const raw = inputEl.value.trim();
+    const n = Number(raw);
+
+    if (raw === '' || !Number.isInteger(n)) {
+      outEl.innerHTML = '<span class="error">Please enter a valid integer.</span>';
+      return;
+    }
+    if (n < cfg.min) {
+      outEl.innerHTML = '<span class="error">The number of terms must be greater than ' +
+                        (cfg.min - 1) + '.</span>';
+      return;
+    }
+
+    const terms = [];
+    for (let i = 0; i < n; i++) terms.push(cfg.fn(i).toString());
+
+    outEl.textContent =
+      cfg.intro + '\n' +
+      'Input the number of terms: ' + n + '\n' +
+      'The ' + cfg.label + ' numbers are: ' + terms.join(', ');
+  }
+
+  function exitApp() {
+    if (confirm('Exit the program?')) {
+      document.body.innerHTML =
+        '<div style="text-align:center;padding:60px;font-family:Segoe UI;">' +
+        '<h2>Thank you for using the program.</h2>' +
+        '<p>You may now close this tab.</p></div>';
+    }
+  }
+</script>
+</body>
+</html>
